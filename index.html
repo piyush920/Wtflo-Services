@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wtflo — WhatsApp Marketing Systems | Pay & Get Started</title>
+  <meta name="description" content="Choose a WhatsApp marketing system, pay securely via Zoho Payments, and get started in 48 hours. Built for Indian service businesses.">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://static.zohocdn.com/zpay/zpay-js/v1/zpayments.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #051f1f;
+      color: #fff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    ::selection { background: #0d9e8a; color: #fff; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 16px 0;
+      background: rgba(5,31,31,0.88);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(13,158,138,0.12);
+    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .logo {
+      font-size: 24px; font-weight: 800; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #0d9e8a, #00f07a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: #0d9e8a; }
+    .nav-cta {
+      background: #0d9e8a; color: #fff !important; padding: 10px 24px; border-radius: 100px;
+      font-weight: 600; font-size: 14px; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(13,158,138,0.35); }
+    .mobile-toggle {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .mobile-toggle span { width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
+    .mobile-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .mobile-toggle.open span:nth-child(2) { opacity: 0; }
+    .mobile-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+        background: rgba(5,31,31,0.98); backdrop-filter: blur(20px);
+        flex-direction: column; padding: 100px 40px 40px; gap: 24px;
+        transition: right 0.4s ease; box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+      }
+      .nav-links.open { right: 0; }
+      .mobile-toggle { display: flex; }
+    }
+
+    .hero {
+      min-height: auto; padding: 140px 0 60px; position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 80% 55% at 50% 0%, rgba(13,158,138,0.15), transparent),
+                  radial-gradient(ellipse 50% 40% at 80% 100%, rgba(0,240,122,0.06), transparent);
+    }
+    .hero .container { position: relative; z-index: 1; text-align: center; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(232,253,245,0.08); border: 1px solid rgba(13,158,138,0.25);
+      padding: 8px 20px; border-radius: 100px; font-size: 13px; font-weight: 500;
+      color: #0d9e8a; margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 4vw, 52px); font-weight: 900; line-height: 1.1;
+      letter-spacing: -0.04em; margin-bottom: 16px;
+    }
+    .hero h1 span { background: linear-gradient(135deg, #0d9e8a, #00f07a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 600px; margin: 0 auto; }
+
+    section { padding: 80px 0; position: relative; }
+    #offers { padding-bottom: 40px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(13,158,138,0.1); border: 1px solid rgba(13,158,138,0.2);
+      padding: 6px 16px; border-radius: 100px; font-size: 12px; font-weight: 600;
+      color: #0d9e8a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(24px, 3vw, 36px); font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 8px; line-height: 1.15;
+    }
+    .section-sub { font-size: 15px; color: rgba(255,255,255,0.5); max-width: 540px; }
+    .section-center { text-align: center; }
+    .section-center .section-sub { margin: 0 auto 40px; }
+
+    /* ZIG-ZAG LADDER — CIRCUIT */
+    .path-cards {
+      max-width: 1080px; margin: 0 auto 48px;
+      position: relative;
+    }
+    .path-hint {
+      text-align: center; font-size: 14px; color: rgba(255,255,255,0.35);
+      margin-bottom: 28px; font-weight: 400; letter-spacing: 0.01em;
+    }
+
+    /* Zig-zag track */
+    .path-track {
+      position: relative;
+      min-height: 780px;
+    }
+
+    /* Diagonal connector lines (SVG) */
+    .path-connector-svg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+      overflow: visible;
+    }
+    .path-connector-svg line {
+      stroke: rgba(255,255,255,0.08);
+      stroke-width: 2;
+      stroke-dasharray: 6 4;
+      transition: all 0.4s ease;
+    }
+    .path-connector-svg line.lit {
+      stroke: #0d9e8a;
+      stroke-width: 2.5;
+      stroke-dasharray: none;
+      filter: drop-shadow(0 0 6px rgba(13,158,138,0.4));
+    }
+    .path-connector-svg .pulse-dot {
+      fill: #00f07a;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .path-connector-svg .pulse-dot.visible {
+      opacity: 1;
+    }
+
+    /* Card positions — clean zig-zag left→right */
+    .path-card {
+      position: absolute;
+      width: 240px;
+      transition: top 0.4s ease, left 0.4s ease, opacity 0.3s;
+    }
+    /* Card 0: top-left */
+    .path-card[data-idx="0"] { top: 0; left: 0; }
+    /* Card 1: bottom (staggered right) */
+    .path-card[data-idx="1"] { top: 250px; left: 280px; }
+    /* Card 2: top (staggered right) */
+    .path-card[data-idx="2"] { top: 0; left: 560px; }
+    /* Card 3: bottom (staggered right) */
+    .path-card[data-idx="3"] { top: 250px; left: 840px; }
+    /* Card 4+: test mode, extra cards */
+    .path-card[data-idx="4"] { top: 500px; left: 140px; }
+
+    .path-card-inner {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.06);
+      border-radius: 24px; padding: 40px 28px 24px; text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    /* LOCKED state */
+    .path-card.locked .path-card-inner {
+      opacity: 0.35; cursor: not-allowed; filter: grayscale(0.5);
+    }
+    .path-card.locked .path-card-inner:hover {
+      transform: none; box-shadow: none; border-color: rgba(255,255,255,0.06);
+    }
+
+    /* AVAILABLE state — "itch to select me" */
+    .path-card.available .path-card-inner {
+      cursor: pointer;
+      border-color: rgba(13,158,138,0.3);
+      animation: cardPulse 2s ease-in-out infinite;
+    }
+    .path-card.available .path-card-inner:hover {
+      border-color: rgba(13,158,138,0.6); transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(13,158,138,0.2);
+    }
+    @keyframes cardPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(13,158,138,0); }
+      50% { box-shadow: 0 0 24px 6px rgba(13,158,138,0.12); }
+    }
+
+    /* SELECTED state */
+    .path-card.selected .path-card-inner {
+      border-color: #0d9e8a; background: rgba(13,158,138,0.06);
+      box-shadow: 0 0 0 1px rgba(13,158,138,0.3), 0 12px 40px rgba(13,158,138,0.15);
+      animation: none; cursor: default;
+    }
+
+    .path-card-icon {
+      width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 18px;
+      background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .path-card-icon svg { width: 30px; height: 30px; color: rgba(255,255,255,0.35); transition: color 0.3s; }
+    .path-card.available .path-card-icon { border-color: rgba(13,158,138,0.3); }
+    .path-card.available .path-card-icon svg { color: rgba(13,158,138,0.7); }
+    .path-card.selected .path-card-icon {
+      background: rgba(13,158,138,0.15); border-color: #0d9e8a;
+    }
+    .path-card.selected .path-card-icon svg { color: #0d9e8a; }
+
+    /* Check circle */
+    .path-card-check {
+      position: absolute; top: 14px; right: 14px;
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.12);
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; transition: all 0.25s ease;
+    }
+    .path-card-check svg { width: 13px; height: 13px; opacity: 0; transition: opacity 0.2s; color: #fff; }
+    .path-card.available .path-card-check {
+      border-color: rgba(13,158,138,0.4);
+      animation: checkGlow 2s ease-in-out infinite;
+    }
+    @keyframes checkGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(13,158,138,0); border-color: rgba(13,158,138,0.4); }
+      50% { box-shadow: 0 0 10px 3px rgba(13,158,138,0.25); border-color: rgba(13,158,138,0.7); }
+    }
+    .path-card.selected .path-card-check {
+      background: #0d9e8a; border-color: #051f1f;
+      animation: checkPop 0.3s ease;
+    }
+    .path-card.selected .path-card-check svg { opacity: 1; }
+    @keyframes checkPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+    .path-card-name {
+      font-size: 17px; font-weight: 700; color: rgba(255,255,255,0.75);
+      margin-bottom: 8px; line-height: 1.3; transition: color 0.3s;
+    }
+    .path-card.available .path-card-name { color: rgba(13,158,138,0.8); }
+    .path-card.selected .path-card-name { color: #00f07a; }
+
+    .path-card-price {
+      font-size: 24px; font-weight: 800; color: #00f07a; margin-bottom: 18px;
+    }
+
+    /* Small deliverables button */
+    .path-card-deliver-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4);
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      transition: all 0.2s; font-family: inherit;
+    }
+    .path-card-deliver-btn:hover { background: rgba(13,158,138,0.1); border-color: rgba(13,158,138,0.3); color: #0d9e8a; }
+    .path-card.selected .path-card-deliver-btn { border-color: rgba(13,158,138,0.25); color: rgba(13,158,138,0.6); }
+    .path-card-deliver-btn svg { width: 11px; height: 11px; transition: transform 0.3s; }
+    .path-card.open .path-card-deliver-btn svg { transform: rotate(180deg); }
+    .path-card.open .path-card-deliver-btn { background: rgba(13,158,138,0.1); border-color: rgba(13,158,138,0.3); color: #0d9e8a; }
+
+    .path-card-body {
+      max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+    }
+    .path-card.open .path-card-body { max-height: 400px; }
+    .path-card-list {
+      padding: 14px 18px 18px; list-style: none; text-align: left;
+    }
+    .path-card-list li {
+      font-size: 13px; color: rgba(255,255,255,0.5); padding: 5px 0;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .path-card-list li::before {
+      content: ''; display: inline-block; width: 5px; height: 5px;
+      border-radius: 50%; background: #00f07a; margin-top: 6px; flex-shrink: 0;
+    }
+    .path-card-tag {
+      display: inline-block; margin: 10px 18px 0; padding: 4px 12px;
+      border-radius: 100px; font-size: 11px; font-weight: 600;
+      background: rgba(0,240,122,0.12); color: #00f07a;
+    }
+
+    /* UNLOCK BUTTON */
+    .path-unlock-wrap { text-align: center; margin: 36px 0 0; }
+    .path-unlock-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.4); padding: 16px 36px; border-radius: 100px;
+      font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.25s;
+      font-family: inherit; pointer-events: none;
+    }
+    .path-unlock-btn.available {
+      pointer-events: auto; color: #fff;
+      border-color: rgba(13,158,138,0.3);
+      animation: cardPulse 2s ease-in-out infinite;
+    }
+    .path-unlock-btn.available:hover { background: rgba(13,158,138,0.12); border-color: rgba(13,158,138,0.5); color: #0d9e8a; }
+    .path-unlock-btn.active {
+      background: linear-gradient(135deg, #0d9e8a, #00c9a7); border-color: transparent;
+      color: #fff; box-shadow: 0 4px 24px rgba(13,158,138,0.3);
+      pointer-events: auto; animation: none;
+    }
+    .path-unlock-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* Mobile: stack vertically */
+    @media (max-width: 900px) {
+      .path-track { min-height: auto; }
+      .path-card { position: relative !important; top: auto !important; left: auto !important; width: 100% !important; margin-bottom: 16px; }
+      .path-connector-svg { display: none; }
+    }
+
+    /* CHECKOUT SECTION — unified */
+    .checkout-section {
+      max-width: 700px; margin: 0 auto; padding: 0 24px;
+      display: none;
+    }
+    .checkout-section.visible { display: block; }
+    .checkout-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 24px; padding: 40px 36px; position: relative;
+    }
+    .checkout-card::before {
+      content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(13,158,138,0.3), transparent);
+    }
+    .checkout-header {
+      text-align: center; margin-bottom: 32px;
+    }
+    .checkout-header .section-label { margin-bottom: 12px; }
+    .checkout-header h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .checkout-header p { font-size: 14px; color: rgba(255,255,255,0.4); }
+
+    .checkout-split-title {
+      text-align: center; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5);
+      margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .payment-split-wrap { display: flex; justify-content: center; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+    .split-option {
+      flex: 1; max-width: 300px; padding: 20px; border-radius: 16px;
+      background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.06);
+      cursor: pointer; transition: 0.25s; text-align: center; position: relative;
+    }
+    .split-option:hover { border-color: rgba(13,158,138,0.3); }
+    .split-option.selected { border-color: #0d9e8a; background: rgba(13,158,138,0.06); }
+    .split-badge {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(135deg, #0d9e8a, #00f07a); color: #fff;
+      padding: 3px 14px; border-radius: 100px; font-size: 10px; font-weight: 700; white-space: nowrap;
+    }
+    .split-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; margin-top: 6px; }
+    .split-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+    .split-savings { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 100px; background: rgba(0,240,122,0.1); color: #00f07a; font-size: 11px; font-weight: 600; }
+
+    .checkout-divider {
+      height: 1px; background: rgba(255,255,255,0.06); margin: 0 0 28px;
+    }
+
+    .promo-wrap { margin-bottom: 28px; }
+    .promo-row { display: flex; gap: 10px; }
+    .promo-row input {
+      flex: 1; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      padding: 12px 16px; color: #fff; font-size: 14px;
+      font-family: inherit; outline: none; transition: 0.3s;
+    }
+    .promo-row input:focus {
+      border-color: #0d9e8a; box-shadow: 0 0 0 3px rgba(13,158,138,0.1);
+    }
+    .promo-row input::placeholder { color: rgba(255,255,255,0.25); }
+    .promo-apply-btn {
+      padding: 12px 24px; border-radius: 10px; border: 1px solid rgba(13,158,138,0.3);
+      background: rgba(13,158,138,0.1); color: #0d9e8a; font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: 0.25s; font-family: inherit;
+    }
+    .promo-apply-btn:hover { background: rgba(13,158,138,0.2); border-color: #0d9e8a; }
+    .promo-msg {
+      font-size: 13px; margin-top: 8px; font-weight: 500; min-height: 20px;
+    }
+    .promo-msg.success { color: #00f07a; }
+    .promo-msg.error { color: #ff6b6b; }
+    .promo-applied-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,240,122,0.1); border: 1px solid rgba(0,240,122,0.25);
+      padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600;
+      color: #00f07a; margin-top: 8px;
+    }
+    .promo-applied-tag button {
+      background: none; border: none; color: rgba(255,255,255,0.4);
+      cursor: pointer; font-size: 14px; padding: 0; line-height: 1;
+    }
+    .promo-applied-tag button:hover { color: #ff6b6b; }
+
+    .pricing-box {
+      padding: 0 0 24px;
+    }
+    .pricing-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; color: rgba(255,255,255,0.5); }
+    .pricing-row.discount { color: #00f07a; }
+    .pricing-row.total { border-top: 2px solid rgba(13,158,138,0.3); margin-top: 8px; padding-top: 12px; font-size: 20px; font-weight: 800; color: #fff; }
+    .pricing-row .pay-now-label { font-size: 12px; color: rgba(255,255,255,0.35); display: block; margin-top: 2px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-field label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 600; margin-bottom: 6px; display: block; }
+    .form-field input, .form-field select {
+      width: 100%; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      padding: 14px 16px; color: #fff; font-size: 14px;
+      font-family: inherit; outline: none; transition: 0.3s;
+    }
+    .form-field input:focus, .form-field select:focus {
+      border-color: #0d9e8a; background: rgba(13,158,138,0.04);
+      box-shadow: 0 0 0 3px rgba(13,158,138,0.1);
+    }
+    .form-field input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-field select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+    .form-field select option { background: #051f1f; color: #fff; }
+
+    .buy-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: linear-gradient(135deg, #0d9e8a, #00c9a7); color: #fff;
+      padding: 18px 40px; border-radius: 14px; border: none;
+      font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
+      font-family: inherit; width: 100%;
+      box-shadow: 0 4px 24px rgba(13,158,138,0.3);
+    }
+    .buy-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(13,158,138,0.4); }
+    .buy-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .buy-btn svg { width: 20px; height: 20px; }
+    .buy-btn .btn-text { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .buy-btn .btn-sub { font-size: 12px; font-weight: 500; opacity: 0.8; }
+
+    .spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* SELECTED COUNT */
+    .selected-count { text-align: center; margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.5); }
+    .selected-count strong { color: #00f07a; }
+
+    /* WHATSAPP FLOATING */
+    .whatsapp-float { position: fixed; bottom: 24px; right: 24px; z-index: 150; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+    .whatsapp-bubble {
+      background: #0a2e2e; border: 1px solid rgba(13,158,138,0.25);
+      border-radius: 16px 16px 4px 16px; padding: 14px 18px;
+      max-width: 240px; font-size: 13px; color: rgba(255,255,255,0.85);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: bubbleIn 0.4s ease 1s both;
+    }
+    .whatsapp-bubble strong { color: #00f07a; }
+    @keyframes bubbleIn { from { opacity: 0; transform: translateY(8px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .whatsapp-btn-float {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #25D366; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: whatsappPulse 2s ease-in-out infinite;
+      text-decoration: none;
+    }
+    .whatsapp-btn-float:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(37,211,102,0.6); }
+    .whatsapp-btn-float svg { width: 32px; height: 32px; fill: #fff; }
+    @keyframes whatsappPulse { 0%, 100% { box-shadow: 0 4px 24px rgba(37,211,102,0.4); } 50% { box-shadow: 0 4px 32px rgba(37,211,102,0.7); } }
+
+    .social-proof {
+      padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .social-proof .container { display: flex; justify-content: center; align-items: center; gap: 48px; flex-wrap: wrap; }
+    .social-proof-item { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.6); }
+    .social-proof-item .sp-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(13,158,138,0.1); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .social-proof-item .sp-text { display: flex; flex-direction: column; gap: 2px; }
+    .social-proof-item .sp-num { font-size: 18px; font-weight: 800; color: #fff; }
+    .social-proof-item .sp-label { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); }
+
+    details[open] summary span { transform: rotate(45deg); }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::marker { display: none; content: ''; }
+
+    footer { padding: 48px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+    footer a { color: #0d9e8a; text-decoration: none; }
+
+    nav.scrolled {
+      background: rgba(5,31,31,0.96);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 110px 0 40px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .checkout-card { padding: 28px 20px; }
+      .social-proof .container { gap: 24px; }
+      .whatsapp-float { bottom: 16px; right: 16px; }
+      .whatsapp-btn-float { width: 52px; height: 52px; }
+      .whatsapp-btn-float svg { width: 28px; height: 28px; }
+      .whatsapp-bubble { max-width: 200px; font-size: 12px; padding: 10px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="logo">wtflo</a>
+    <div class="nav-links" id="navLinks">
+      <a href="../index.html">Home</a>
+      <a href="#offers">Systems</a>
+      <a href="https://app.wtflo.com" class="nav-cta" target="_blank">Open App</a>
+    </div>
+    <div class="mobile-toggle" id="mobileToggle" onclick="toggleNav()" role="button" tabindex="0" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="hero-badge">&#9889; WhatsApp Marketing Systems</div>
+    <h1>Your Perfect WhatsApp Booking System,<br/><span>Built by Our Team.</span></h1>
+    <p>Pick your stages. Our team builds your complete system, ready in 7 days.</p>
+  </div>
+</section>
+
+<section id="offers">
+  <div class="container">
+    <div class="path-cards" id="pathCards">
+      <p class="path-hint">Tap each stage to build your system</p>
+      <div class="path-track" id="pathTrack">
+        <svg class="path-connector-svg" id="connectorSvg">
+          <line id="seg-0" x1="0" y1="0" x2="0" y2="0"/>
+          <line id="seg-1" x1="0" y1="0" x2="0" y2="0"/>
+          <line id="seg-2" x1="0" y1="0" x2="0" y2="0"/>
+          <line id="seg-3" x1="0" y1="0" x2="0" y2="0"/>
+          <circle class="pulse-dot" id="pulseDot" r="4" cx="0" cy="0"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="checkout-section" id="checkoutSection">
+  <div class="checkout-card">
+    <div class="checkout-header">
+      <div class="section-label">&#9993; Complete Your Order</div>
+      <h2>Finish Setup</h2>
+      <p>Fill in your details and pay to get started within 48 hours.</p>
+    </div>
+
+    <div class="checkout-split-title">Payment Method</div>
+    <div class="payment-split-wrap">
+      <div class="split-option selected" data-split="full" onclick="setSplit('full')">
+        <div class="split-badge">&#128293; SAVE 10%</div>
+        <div class="split-title">100% Now</div>
+        <div class="split-desc">Pay full amount now and get <strong style="color:#00f07a">10% OFF</strong></div>
+        <div class="split-savings" id="savingsAmount">You save &#8377;0</div>
+      </div>
+      <div class="split-option" data-split="split" onclick="setSplit('split')">
+        <div class="split-title">50-50 Split</div>
+        <div class="split-desc">Pay 50% now, 50% on project completion</div>
+      </div>
+    </div>
+
+    <div class="checkout-divider"></div>
+
+    <div class="pricing-box" id="pricingBox">
+      <div class="pricing-row">
+        <span>Setup Fee</span><span id="priceSubtotal">&#8377;0</span>
+      </div>
+      <div class="pricing-row discount" id="priceDiscountRow" style="display:none;">
+        <span>Discount (10%)</span><span id="priceDiscount">-&#8377;0</span>
+      </div>
+      <div class="pricing-row">
+        <span>GST @18%</span><span id="priceGst">&#8377;0</span>
+      </div>
+      <div class="pricing-row total">
+        <span>
+          <span id="priceTotalLabel">Total</span>
+          <span class="pay-now-label" id="pricePayLabel"></span>
+        </span>
+        <span id="priceTotal">&#8377;0</span>
+      </div>
+    </div>
+
+    <div class="checkout-divider"></div>
+
+    <div class="promo-wrap" id="promoWrap">
+      <div class="promo-row">
+        <input type="text" id="promoInput" placeholder="Have a promo code?" maxlength="20" style="text-transform: uppercase;">
+        <button class="promo-apply-btn" onclick="applyPromo()">Apply</button>
+      </div>
+      <div class="promo-msg" id="promoMsg"></div>
+    </div>
+
+    <div class="checkout-divider"></div>
+
+    <div class="form-grid">
+      <div class="form-field full">
+        <label>Full Name *</label>
+        <input type="text" id="contactName" placeholder="Your name">
+      </div>
+      <div class="form-field">
+        <label>Email *</label>
+        <input type="email" id="contactEmail" placeholder="you@company.com">
+      </div>
+      <div class="form-field">
+        <label>Phone *</label>
+        <input type="tel" id="contactPhone" placeholder="+91 98765 43210">
+      </div>
+      <div class="form-field">
+        <label>Company Name</label>
+        <input type="text" id="contactCompany" placeholder="Your company (optional)">
+      </div>
+      <div class="form-field">
+        <label>GSTIN (for GST invoice)</label>
+        <input type="text" id="contactGSTIN" placeholder="22AAAAA0000A1Z5 (optional)" maxlength="15" style="text-transform: uppercase;" oninput="handleGSTINChange()">
+      </div>
+      <div class="form-field full">
+        <label>Address *</label>
+        <input type="text" id="contactAddress" placeholder="Flat/Office, Building, Street, Area">
+      </div>
+      <div class="form-field">
+        <label>City *</label>
+        <input type="text" id="contactCity" placeholder="City">
+      </div>
+      <div class="form-field">
+        <label>State *</label>
+        <input type="text" id="contactState" placeholder="State">
+      </div>
+      <div class="form-field">
+        <label>Pincode *</label>
+        <input type="text" id="contactPincode" placeholder="Pincode" maxlength="6">
+      </div>
+      <div class="form-field">
+        <label>Monthly Retainer?</label>
+        <select id="retainerChoice">
+          <option value="none">No retainer (setup only)</option>
+          <option value="yes">Yes, ₹30,000/mo billed separately after setup</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="buy-btn" onclick="proceedToPayment()" id="payBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <div class="btn-text">
+        <span id="payBtnLabel">Pay Now via Zoho</span>
+        <span class="btn-sub" id="payBtnSub">Secure checkout powered by Zoho Payments</span>
+      </div>
+    </button>
+  </div>
+</div>
+
+<section class="faq-section" style="max-width:760px; margin:0 auto; padding:80px 24px;">
+  <div class="section-center" style="margin-bottom:40px;">
+    <div class="section-label">&#10067; Frequently Asked</div>
+    <h2 class="section-title" style="font-size:28px;">Got Questions?</h2>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <details style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:20px 24px; cursor:pointer;">
+      <summary style="font-size:15px; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        What happens after I pay?
+        <span style="font-size:20px; color:rgba(255,255,255,0.3); transition:0.3s;">+</span>
+      </summary>
+      <div style="margin-top:12px; font-size:14px; color:rgba(255,255,255,0.5); line-height:1.7;">
+        We'll reach out within 24 hours to kick off your project. You'll get a dedicated point of contact and a clear timeline for deliverables.
+      </div>
+    </details>
+    <details style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:20px 24px; cursor:pointer;">
+      <summary style="font-size:15px; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Can I pay in two parts?
+        <span style="font-size:20px; color:rgba(255,255,255,0.3); transition:0.3s;">+</span>
+      </summary>
+      <div style="margin-top:12px; font-size:14px; color:rgba(255,255,255,0.5); line-height:1.7;">
+        Yes! Choose the 50-50 Split option. Pay 50% now to get started, and 50% when we deliver. GST applies to the full amount.
+      </div>
+    </details>
+    <details style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:20px 24px; cursor:pointer;">
+      <summary style="font-size:15px; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        What's the monthly retainer?
+        <span style="font-size:20px; color:rgba(255,255,255,0.3); transition:0.3s;">+</span>
+      </summary>
+      <div style="margin-top:12px; font-size:14px; color:rgba(255,255,255,0.5); line-height:1.7;">
+        The setup fee is a one-time payment. The monthly retainer (₹30,000/mo + GST) is for ongoing management, optimization, and support. It's optional and billed separately.
+      </div>
+    </details>
+    <details style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:20px 24px; cursor:pointer;">
+      <summary style="font-size:15px; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Can I get a refund?
+        <span style="font-size:20px; color:rgba(255,255,255,0.3); transition:0.3s;">+</span>
+      </summary>
+      <div style="margin-top:12px; font-size:14px; color:rgba(255,255,255,0.5); line-height:1.7;">
+        Payment is non-refundable once work has commenced. If you haven't started yet, reach out on WhatsApp and we'll work something out.
+      </div>
+    </details>
+    <details style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:20px 24px; cursor:pointer;">
+      <summary style="font-size:15px; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        What payment methods are accepted?
+        <span style="font-size:20px; color:rgba(255,255,255,0.3); transition:0.3s;">+</span>
+      </summary>
+      <div style="margin-top:12px; font-size:14px; color:rgba(255,255,255,0.5); line-height:1.7;">
+        UPI, credit/debit cards, net banking, and wallets — all via Zoho Payments' secure checkout. Your payment details are never stored on our servers.
+      </div>
+    </details>
+    <details style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:20px 24px; cursor:pointer;">
+      <summary style="font-size:15px; font-weight:600; color:#fff; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Do I get a GST invoice?
+        <span style="font-size:20px; color:rgba(255,255,255,0.3); transition:0.3s;">+</span>
+      </summary>
+      <div style="margin-top:12px; font-size:14px; color:rgba(255,255,255,0.5); line-height:1.7;">
+        Yes. You'll receive a GST-compliant invoice via email after payment. You can claim 18% input tax credit on this purchase.
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="social-proof">
+  <div class="container">
+    <div class="social-proof-item">
+      <div class="sp-icon">&#128188;</div>
+      <div class="sp-text">
+        <span class="sp-num">500+</span>
+        <span class="sp-label">Businesses Trust Wtflo</span>
+      </div>
+    </div>
+    <div class="social-proof-item">
+      <div class="sp-icon">&#11088;</div>
+      <div class="sp-text">
+        <span class="sp-num">4.9/5</span>
+        <span class="sp-label">Customer Rating</span>
+      </div>
+    </div>
+    <div class="social-proof-item">
+      <div class="sp-icon">&#127470;&#127475;</div>
+      <div class="sp-text">
+        <span class="sp-num">Made in India</span>
+        <span class="sp-label">Built for Indian Businesses</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="whatsapp-float" id="whatsappWidget">
+  <div class="whatsapp-bubble" id="whatsappBubble">
+    <strong>Need help?</strong><br/>
+    Chat with us on WhatsApp — we'll answer instantly.
+  </div>
+  <a href="https://wa.me/918796965200?text=Hi%20Wtflo%2C%20I'm%20interested%20in%20your%20WhatsApp%20marketing%20systems." target="_blank" rel="noopener" class="whatsapp-btn-float" aria-label="Chat on WhatsApp" onclick="document.getElementById('whatsappBubble').style.display='none'">
+    <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.054 9.374L1.054 31.25l6.112-1.97A15.907 15.907 0 0 0 16.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.316 22.626c-.39 1.096-1.932 2.006-3.16 2.27-.834.18-1.924.322-5.598-1.202-4.704-1.95-7.724-6.72-7.956-7.034-.224-.314-1.88-2.5-1.88-4.768s1.19-3.384 1.612-3.85c.39-.428.924-.604 1.23-.604.148 0 .28.008.4.01.424.016.636.044.912.706.35.836 1.196 2.91 1.3 3.122.104.212.208.494.064.772-.136.296-.256.44-.492.712-.236.272-.46.484-.7.78-.216.256-.46.532-.188.988.268.444 1.192 1.964 2.56 3.182 1.76 1.568 3.188 2.106 3.764 2.342.444.18.716.152.98-.108.264-.26.864-1.004 1.092-1.35.228-.344.46-.288.768-.172.312.112 1.972.93 2.312 1.1.34.172.564.256.648.396.088.14.088.804-.304 1.9z"/></svg>
+  </a>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Wtflo. Built for Indian service businesses. <a href="https://wtflo.com">wtflo.com</a></p>
+  </div>
+</footer>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const TEST_MODE = urlParams.get('test') === '1';
+
+const OFFERS = [
+  {
+    id: 'lead-gen',
+    name: 'Lead Generation from Meta & WhatsApp Ads',
+    shortName: 'Lead Generation',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>',
+    deliverables: [
+      '10 high converting static ad creatives to attract the correct lead',
+      'Meta ads targeting',
+      'Campaign creation',
+      'Ad set creation',
+      'Retargeting campaigns',
+      'Every lead tracked from ad to WhatsApp to CRM (Meta Pixel setup & tracking included)',
+      'Click-to-WhatsApp ads — no landing page needed',
+      'Instant auto-reply when someone messages from your ad',
+      'Leads auto-saved in your CRM — zero manual entry',
+      '30 days of our team optimizing your ad spend'
+    ],
+    price: 25000,
+    tag: 'popular'
+  },
+  {
+    id: 'instant-booking',
+    name: 'WhatsApp Booking System',
+    shortName: 'WhatsApp Booking',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    deliverables: [
+      'Get back to your leads under 3 sec',
+      'Pre-qualifies leads on WhatsApp so you only talk to serious buyers',
+      'Leads books directly into your Google Calendar',
+      'Collects advance payments before the appointment',
+      'Leads gets their support under 30 seconds — even at 2 AM',
+      'Distributes leads fairly across your team'
+    ],
+    price: 25000,
+    tag: null
+  },
+  {
+    id: 'followup',
+    name: 'Follow-Up System',
+    shortName: 'Follow-Up System',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+    deliverables: [
+      'Daily follow-up for 5 days with high-quality images & resources',
+      'Then weekly follow-ups to keep your business top of their mind',
+      'Sends appointment reminders so they actually show up',
+      'Personalised messages to avoid sounding spammy',
+      'Sends at the time they are most likely to respond',
+      'Engagement tracking dashboard & CRM for accurate insights'
+    ],
+    price: 25000,
+    tag: null
+  },
+  {
+    id: 'recovery',
+    name: 'Lost Lead Recovery System',
+    shortName: 'Recovery System',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>',
+    deliverables: [
+      'Brings dead leads back to life every 15 days',
+      'Quietly recovers leads you thought were lost',
+      'Personalized messages that re-open conversations',
+      'Sends the right offer at the right time',
+      'Monthly report: how many leads we recovered',
+      'Every lead gets a second chance'
+    ],
+    price: 25000,
+    tag: null
+  }
+];
+
+if (TEST_MODE) {
+  OFFERS.push({
+    id: 'test-payment',
+    name: 'TEST - ₹1 Payment',
+    shortName: 'Test Payment',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+    deliverables: [
+      'Full payment flow test',
+      'Creates real invoice in Zoho Books',
+      'Sends email notification',
+      'Test webhook processing'
+    ],
+    price: 1,
+    tag: null
+  });
+}
+
+let selectedSplit = 'full';
+let selectedOffers = new Set();
+let gstinLookupTimeout = null;
+let activePromo = null;
+
+const PROMO_CODES = {
+  'PILOT1': { freeSystems: 1, label: '1 system free' },
+  'PILOT2': { freeSystems: 2, label: '2 systems free' },
+  'PILOT3': { freeSystems: 3, label: '3 systems free' },
+  'FOUNDER4': { freeSystems: 4, label: 'All 4 systems free' }
+};
+
+function handleGSTINChange() {
+  clearTimeout(gstinLookupTimeout);
+  const gstin = document.getElementById('contactGSTIN').value.trim().toUpperCase();
+  if (gstin.length !== 15) return;
+  gstinLookupTimeout = setTimeout(() => lookupGSTINAddress(gstin), 500);
+}
+
+async function lookupGSTINAddress(gstin) {
+  try {
+    const res = await fetch(`/api/zoho/gstin-lookup?gstin=${gstin}`);
+    const data = await res.json();
+    if (data.success && data.address) {
+      const a = data.address;
+      if (a.street) document.getElementById('contactAddress').value = a.street;
+      if (a.city) document.getElementById('contactCity').value = a.city;
+      if (a.state) document.getElementById('contactState').value = a.state;
+      if (a.pincode) document.getElementById('contactPincode').value = a.pincode;
+      if (a.company) document.getElementById('contactCompany').value = a.company;
+    }
+  } catch (e) {
+    console.error('GSTIN lookup failed:', e);
+  }
+}
+
+function applyPromo() {
+  const input = document.getElementById('promoInput');
+  const msg = document.getElementById('promoMsg');
+  const code = input.value.trim().toUpperCase();
+
+  if (!code) {
+    msg.className = 'promo-msg error';
+    msg.textContent = 'Please enter a code';
+    return;
+  }
+
+  const promo = PROMO_CODES[code];
+  if (!promo) {
+    msg.className = 'promo-msg error';
+    msg.textContent = 'Invalid promo code';
+    return;
+  }
+
+  if (selectedOffers.size === 0) {
+    msg.className = 'promo-msg error';
+    msg.textContent = 'Select at least one system first';
+    return;
+  }
+
+  if (promo.freeSystems > selectedOffers.size) {
+    msg.className = 'promo-msg error';
+    msg.textContent = `This code frees ${promo.freeSystems} system(s). Select at least ${promo.freeSystems} first.`;
+    return;
+  }
+
+  activePromo = { code, ...promo };
+  msg.className = 'promo-msg success';
+  msg.innerHTML = `Applied! ${promo.label} <span class="promo-applied-tag">${code} <button onclick="removePromo()">&times;</button></span>`;
+  input.value = '';
+  updatePricing();
+}
+
+function removePromo() {
+  activePromo = null;
+  const msg = document.getElementById('promoMsg');
+  msg.className = 'promo-msg';
+  msg.textContent = '';
+  updatePricing();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderOffers();
+  initNav();
+  requestAnimationFrame(() => {
+    positionConnectors();
+  });
+  window.addEventListener('resize', positionConnectors);
+});
+
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+  document.getElementById('mobileToggle').classList.toggle('open');
+}
+
+function initNav() {
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+}
+
+function renderOffers() {
+  const track = document.getElementById('pathTrack');
+  const svg = document.getElementById('connectorSvg');
+
+  // Clear existing cards from track (keep svg and unlock btn)
+  track.querySelectorAll('.path-card').forEach(c => c.remove());
+
+  OFFERS.forEach((o, i) => {
+    const state = getCardState(i);
+    const card = document.createElement('div');
+    card.className = `path-card ${state}`;
+    card.id = `card-${o.id}`;
+    card.setAttribute('data-idx', i);
+    card.innerHTML = `
+      <div class="path-card-inner" ${state !== 'locked' ? `onclick="toggleOffer('${o.id}')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ')toggleOffer('${o.id}')"` : ''}>
+        <div class="path-card-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="path-card-icon">${o.icon}</div>
+        <div class="path-card-name">${o.shortName}</div>
+        <div class="path-card-price">\u20B9${o.price.toLocaleString('en-IN')}</div>
+        <button class="path-card-deliver-btn" onclick="event.stopPropagation(); toggleDetail('${o.id}')">
+          What's included
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="path-card-body">
+        <ul class="path-card-list">
+          ${o.deliverables.map(d => `<li>${d}</li>`).join('')}
+        </ul>
+        ${o.tag ? `<span class="path-card-tag">&#128293; Most Popular</span>` : ''}
+      </div>
+    `;
+    track.appendChild(card);
+  });
+
+  updateConnectors();
+  updateUnlockBtn();
+  requestAnimationFrame(positionConnectors);
+}
+
+function getCardState(index) {
+  const id = OFFERS[index].id;
+  if (selectedOffers.has(id)) return 'selected';
+  return 'available';
+}
+
+function positionConnectors() {
+  const track = document.getElementById('pathTrack');
+  const svg = document.getElementById('connectorSvg');
+  if (!track || !svg) return;
+
+  const trackRect = track.getBoundingClientRect();
+  const cards = track.querySelectorAll('.path-card');
+  if (cards.length < 2) return;
+
+  // Set SVG size to match track
+  svg.setAttribute('width', trackRect.width);
+  svg.setAttribute('height', trackRect.height);
+
+  const centers = [];
+  cards.forEach(card => {
+    const inner = card.querySelector('.path-card-inner');
+    if (!inner) return;
+    const r = inner.getBoundingClientRect();
+    centers.push({
+      x: r.left - trackRect.left + r.width / 2,
+      y: r.top - trackRect.top + r.height / 2
+    });
+  });
+
+  // Draw connector lines
+  for (let i = 0; i < centers.length - 1; i++) {
+    const line = document.getElementById('seg-' + i);
+    if (!line) continue;
+    line.setAttribute('x1', centers[i].x);
+    line.setAttribute('y1', centers[i].y);
+    line.setAttribute('x2', centers[i + 1].x);
+    line.setAttribute('y2', centers[i + 1].y);
+  }
+}
+
+function updateConnectors() {
+  const svg = document.getElementById('connectorSvg');
+  if (!svg) return;
+  const dot = document.getElementById('pulseDot');
+  const count = OFFERS.length;
+
+  for (let i = 0; i < count - 1; i++) {
+    const line = document.getElementById('seg-' + i);
+    if (!line) continue;
+    const leftSel = selectedOffers.has(OFFERS[i].id);
+    line.classList.toggle('lit', leftSel);
+  }
+
+  let litSeg = -1;
+  for (let i = 0; i < count - 1; i++) {
+    if (selectedOffers.has(OFFERS[i].id) && !selectedOffers.has(OFFERS[i + 1].id)) {
+      litSeg = i;
+    }
+  }
+
+  if (dot && litSeg >= 0) {
+    const line = document.getElementById('seg-' + litSeg);
+    if (line) {
+      const x1 = parseFloat(line.getAttribute('x1'));
+      const y1 = parseFloat(line.getAttribute('y1'));
+      const x2 = parseFloat(line.getAttribute('x2'));
+      const y2 = parseFloat(line.getAttribute('y2'));
+      dot.setAttribute('cx', x1);
+      dot.setAttribute('cy', y1);
+      dot.classList.add('visible');
+      dot.style.animation = 'none';
+      dot.offsetHeight; // reflow
+      animateDot(dot, x1, y1, x2, y2, 1500);
+    }
+  } else if (dot) {
+    dot.classList.remove('visible');
+    if (dot._animFrame) cancelAnimationFrame(dot._animFrame);
+  }
+}
+
+function updateUnlockBtn() {
+  const btn = document.getElementById('unlockAllBtn');
+  if (!btn) return;
+  const allSelected = selectedOffers.size === OFFERS.length;
+  if (allSelected) {
+    btn.classList.add('active');
+    btn.classList.remove('available');
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All Selected \u2014 10% OFF';
+  } else if (selectedOffers.size > 0) {
+    btn.classList.add('available');
+    btn.classList.remove('active');
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Select All';
+  } else {
+    btn.classList.remove('active', 'available');
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> Select All';
+  }
+}
+
+function animateDot(dot, x1, y1, x2, y2, duration) {
+  if (dot._animFrame) cancelAnimationFrame(dot._animFrame);
+  const start = performance.now();
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    dot.setAttribute('cx', x1 + (x2 - x1) * ease);
+    dot.setAttribute('cy', y1 + (y2 - y1) * ease);
+    if (t < 1) dot._animFrame = requestAnimationFrame(tick);
+    else dot._animFrame = requestAnimationFrame(() => animateDot(dot, x1, y1, x2, y2, duration));
+  }
+  dot._animFrame = requestAnimationFrame(tick);
+}
+
+function toggleDetail(id) {
+  const card = document.getElementById('card-' + id);
+  if (!card) return;
+  card.classList.toggle('open');
+}
+
+function toggleOffer(id) {
+  const offerIndex = OFFERS.findIndex(o => o.id === id);
+  if (offerIndex < 0) return;
+
+  if (selectedOffers.has(id)) {
+    selectedOffers.delete(id);
+  } else {
+    selectedOffers.add(id);
+  }
+  renderOffers();
+  updateCheckoutVisibility();
+  updatePricing();
+}
+
+function selectAllOffers() {
+  if (selectedOffers.size === OFFERS.length) {
+    selectedOffers.clear();
+  } else {
+    OFFERS.forEach(o => selectedOffers.add(o.id));
+  }
+  renderOffers();
+  updateCheckoutVisibility();
+  updatePricing();
+}
+
+function animateSelectAll() {
+  selectedOffers.clear();
+  renderOffers();
+  updateCheckoutVisibility();
+  updatePricing();
+
+  const stepMs = 150;
+  let delay = 0;
+  OFFERS.forEach((o, i) => {
+    setTimeout(() => {
+      selectedOffers.add(o.id);
+      const card = document.getElementById('card-' + o.id);
+      if (card) {
+        card.className = 'path-card selected';
+        const inner = card.querySelector('.path-card-inner');
+        if (inner) inner.onclick = null;
+      }
+      updateConnectors();
+      updateUnlockBtn();
+      requestAnimationFrame(positionConnectors);
+    }, delay);
+    delay += stepMs;
+  });
+  setTimeout(() => {
+    updateCheckoutVisibility();
+    updatePricing();
+  }, delay + 50);
+}
+
+function updateCheckoutVisibility() {
+  const section = document.getElementById('checkoutSection');
+  if (!section) return;
+  section.classList.toggle('visible', selectedOffers.size > 0);
+}
+
+function setSplit(split) {
+  selectedSplit = split;
+  document.querySelectorAll('.split-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.split === split);
+  });
+  updatePricing();
+}
+
+function updatePricing() {
+  const count = selectedOffers.size;
+
+  if (count === 0) {
+    document.getElementById('savingsAmount').textContent = 'You save ₹0';
+    document.getElementById('priceSubtotal').textContent = '₹0';
+    document.getElementById('priceDiscountRow').style.display = 'none';
+    document.getElementById('priceGst').textContent = '₹0';
+    document.getElementById('priceTotal').textContent = '₹0';
+    return;
+  }
+
+  let subtotal = 0;
+  const selectedPrices = [];
+  OFFERS.forEach(o => {
+    if (selectedOffers.has(o.id)) {
+      subtotal += o.price;
+      selectedPrices.push(o.price);
+    }
+  });
+
+  let discount = selectedSplit === 'full' ? Math.round(subtotal * 0.10) : 0;
+  let promoDiscount = 0;
+
+  if (activePromo) {
+    selectedPrices.sort((a, b) => b - a);
+    for (let i = 0; i < activePromo.freeSystems && i < selectedPrices.length; i++) {
+      promoDiscount += selectedPrices[i];
+    }
+    discount = 0;
+  }
+
+  const taxable = subtotal - discount - promoDiscount;
+  const gst = Math.round(taxable * 0.18);
+  const total = taxable + gst;
+  const payNow = selectedSplit === 'full' ? total : Math.round(total / 2);
+
+  document.getElementById('savingsAmount').textContent = `You save ₹${(discount + promoDiscount).toLocaleString('en-IN')}`;
+  document.getElementById('priceSubtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+
+  const discountRow = document.getElementById('priceDiscountRow');
+  if (discount + promoDiscount > 0) {
+    discountRow.style.display = 'flex';
+    const label = activePromo ? `Promo (${activePromo.code})` : 'Discount (10%)';
+    discountRow.querySelector('span:first-child').textContent = label;
+    document.getElementById('priceDiscount').textContent = `-\u20B9${(discount + promoDiscount).toLocaleString('en-IN')}`;
+  } else {
+    discountRow.style.display = 'none';
+  }
+
+  document.getElementById('priceGst').textContent = `₹${gst.toLocaleString('en-IN')}`;
+
+  if (selectedSplit === 'full') {
+    document.getElementById('priceTotalLabel').textContent = 'Total (Incl. GST)';
+    document.getElementById('pricePayLabel').textContent = '';
+    document.getElementById('priceTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
+    document.getElementById('payBtnLabel').textContent = 'Pay Now via Zoho';
+  } else {
+    document.getElementById('priceTotalLabel').textContent = 'Pay Now (50%)';
+    document.getElementById('pricePayLabel').textContent = `Full: ₹${total.toLocaleString('en-IN')} — Balance on completion`;
+    document.getElementById('priceTotal').textContent = `₹${payNow.toLocaleString('en-IN')}`;
+    document.getElementById('payBtnLabel').textContent = 'Pay 50% Now via Zoho';
+  }
+}
+
+async function proceedToPayment() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const rawPhone = document.getElementById('contactPhone').value.trim();
+  const gstin = document.getElementById('contactGSTIN').value.trim().toUpperCase();
+  const company = document.getElementById('contactCompany').value.trim();
+  const address = document.getElementById('contactAddress').value.trim();
+  const city = document.getElementById('contactCity').value.trim();
+  const state = document.getElementById('contactState').value.trim();
+  const pincode = document.getElementById('contactPincode').value.trim();
+
+  if (!name || !email || !rawPhone) {
+    alert('Please fill in your name, email, and phone.');
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  let phone = rawPhone.replace(/[\s\-]/g, '');
+  if (phone.startsWith('0')) phone = phone.substring(1);
+  if (!phone.startsWith('+91')) phone = '+91' + phone;
+
+  if (gstin && gstin.length !== 15) {
+    alert('GSTIN must be exactly 15 characters.');
+    return;
+  }
+
+  if (!address || !city || !state || !pincode) {
+    alert('Please fill in your full address, city, state, and pincode.');
+    return;
+  }
+
+  if (selectedOffers.size === 0) {
+    alert('Please select at least one system.');
+    return;
+  }
+
+  if (selectedOffers.size > 4) {
+    alert('Maximum 4 systems can be selected.');
+    return;
+  }
+
+  const btn = document.getElementById('payBtn');
+  const originalHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Creating secure checkout...';
+
+  try {
+    let subtotal = 0;
+    const offerIds = [];
+    const offerPrices = [];
+    OFFERS.forEach(o => {
+      if (selectedOffers.has(o.id)) {
+        subtotal += o.price;
+        offerIds.push(o.id);
+        offerPrices.push(o.price);
+      }
+    });
+
+    let discount = selectedSplit === 'full' ? Math.round(subtotal * 0.10) : 0;
+    let promoDiscount = 0;
+    if (activePromo) {
+      offerPrices.sort((a, b) => b - a);
+      for (let i = 0; i < activePromo.freeSystems && i < offerPrices.length; i++) {
+        promoDiscount += offerPrices[i];
+      }
+      discount = 0;
+    }
+
+    const taxable = subtotal - discount - promoDiscount;
+    const gst = Math.round(taxable * 0.18);
+    const total = taxable + gst;
+    const payNow = selectedSplit === 'full' ? total : Math.round(total / 2);
+
+    if (total === 0) {
+      const freeRes = await fetch('/api/zoho/free-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: name,
+          customer_email: email,
+          customer_phone: phone,
+          customer_gstin: gstin,
+          customer_company: company,
+          customer_address: address,
+          customer_city: city,
+          customer_state: state,
+          customer_pincode: pincode,
+          description: `Wtflo - ${selectedOffers.size} system(s) (Promo: ${activePromo.code})`,
+          offer_ids: offerIds.join(','),
+          promo_code: activePromo.code
+        })
+      });
+      const freeData = await freeRes.json();
+      if (!freeData.success) throw new Error(freeData.error || 'Failed to create invoice');
+      window.location.href = `/payment-success?payment_id=free-${freeData.invoice_number}&amount=0&payment_status=succeeded`;
+      return;
+    }
+
+    const res = await fetch('/api/zoho/create-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: payNow,
+        currency: 'INR',
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+        customer_gstin: gstin,
+        customer_company: company,
+        customer_address: address,
+        customer_city: city,
+        customer_state: state,
+        customer_pincode: pincode,
+        description: `Wtflo - ${selectedOffers.size} system(s)`,
+        offer_ids: offerIds.join(','),
+        split_type: selectedSplit,
+        promo_code: activePromo ? activePromo.code : ''
+      })
+    });
+
+    const data = await res.json();
+    if (!data.success || !data.payment_session_id) {
+      throw new Error(data.error || 'Failed to create payment session');
+    }
+
+    if (typeof window.ZPayments === 'undefined') {
+      throw new Error('Payment system failed to load. Please refresh and try again.');
+    }
+
+    let config = {
+      account_id: "60078356828",
+      domain: "IN",
+      otherOptions: {
+        api_key: "1003.1f758e8911608a8ceae9ce09438b2118.c9a664816fb956340b75cfa5e252df13"
+      }
+    };
+    let instance = new window.ZPayments(config);
+
+    let options = {
+      amount: String(payNow),
+      currency_code: "INR",
+      payments_session_id: data.payment_session_id,
+      currency_symbol: "\u20B9",
+      business: "Wtflo",
+      description: `${selectedOffers.size} WhatsApp Marketing System(s)`,
+      address: {
+        name: name,
+        email: email,
+        phone: phone
+      }
+    };
+
+    let paymentResult = await instance.requestPaymentMethod(options);
+    await instance.close();
+    window.location.href = `/payment-success?payment_id=${paymentResult.payment_id}&amount=${payNow}&payment_status=succeeded`;
+  } catch (err) {
+    if (err.code === 'widget_closed') {
+      btn.innerHTML = originalHTML;
+      btn.disabled = false;
+      return;
+    }
+    alert('Error: ' + (err.message || err.code || 'Unknown error'));
+    btn.innerHTML = originalHTML;
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>

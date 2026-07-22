@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful — Wtflo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #051f1f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      max-width: 520px;
+    }
+    .success-icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d9e8a, #00f07a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 24px;
+      animation: popIn 0.5s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    h1 span { color: #00f07a; }
+    p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .details {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .details-row:last-child { border: none; }
+    .details-label { color: rgba(255,255,255,0.4); }
+    .details-value { color: #fff; font-weight: 600; }
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0d9e8a, #00c9a7);
+      color: #fff;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(13,158,138,0.4); }
+    .whatsapp-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #25D366; color: #fff;
+      padding: 14px 32px; border-radius: 100px;
+      text-decoration: none; font-weight: 600; font-size: 14px;
+      margin-left: 12px;
+      transition: 0.3s;
+    }
+    .whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,211,102,0.4); }
+    @media (max-width: 480px) {
+      .container { padding: 24px; }
+      h1 { font-size: 22px; }
+      .whatsapp-btn { margin-left: 0; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="success-icon">&#10003;</div>
+    <h1>Payment <span>Successful!</span></h1>
+    <p>Thank you for choosing Wtflo. We've received your payment and will reach out within 24 hours to kick things off.</p>
+
+    <div class="details" id="paymentDetails" style="display:none;">
+      <div class="details-row">
+        <span class="details-label">Payment ID</span>
+        <span class="details-value" id="paymentId">—</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Amount</span>
+        <span class="details-value" id="paymentAmount">—</span>
+      </div>
+      <div class="details-row">
+        <span class="details-label">Status</span>
+        <span class="details-value" id="paymentStatus" style="color:#00f07a;">—</span>
+      </div>
+    </div>
+
+    <div>
+      <a href="https://services.wtflo.com" class="btn btn-primary">Back to Services</a>
+      <a href="https://wa.me/918796965200?text=Hi%20Wtflo%2C%20I%20just%20made%20a%20payment%20for%20your%20services." target="_blank" class="whatsapp-btn">
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const paymentId = params.get('payment_id');
+    const amount = params.get('amount');
+    const status = params.get('payment_status') || params.get('payment_session_status');
+
+    if (paymentId) {
+      document.getElementById('paymentDetails').style.display = 'block';
+      document.getElementById('paymentId').textContent = paymentId;
+      document.getElementById('paymentAmount').textContent = amount ? `\u20B9${parseFloat(amount).toLocaleString('en-IN')}` : '—';
+      document.getElementById('paymentStatus').textContent = status || 'succeeded';
+    }
+  </script>
+</body>
+</html>

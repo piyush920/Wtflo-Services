@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/payment-success", "destination": "/payment-success.html" },
+    { "source": "/payment-failure", "destination": "/payment-failure.html" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+  "headers": [
+    {
+      "source": "/api/zoho/webhook",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "https://services.wtflo.com" },
+        { "key": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, X-Zoho-Webhook-Signature" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "https://services.wtflo.com" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}

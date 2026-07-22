@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Failed — Wtflo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #051f1f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      max-width: 520px;
+    }
+    .fail-icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e03a3a, #ff6b6b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 24px;
+      animation: popIn 0.5s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    h1 span { color: #e03a3a; }
+    p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0d9e8a, #00c9a7);
+      color: #fff;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(13,158,138,0.4); }
+    .whatsapp-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #25D366; color: #fff;
+      padding: 14px 32px; border-radius: 100px;
+      text-decoration: none; font-weight: 600; font-size: 14px;
+      margin-left: 12px;
+      transition: 0.3s;
+    }
+    .whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,211,102,0.4); }
+    @media (max-width: 480px) {
+      .container { padding: 24px; }
+      h1 { font-size: 22px; }
+      .whatsapp-btn { margin-left: 0; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="fail-icon">&#10007;</div>
+    <h1>Payment <span>Failed</span></h1>
+    <p>Something went wrong with your payment. Don't worry — no amount was deducted. Please try again or contact us on WhatsApp for help.</p>
+    <div>
+      <a href="https://services.wtflo.com" class="btn btn-primary">Try Again</a>
+      <a href="https://wa.me/918796965200?text=Hi%20Wtflo%2C%20my%20payment%20failed.%20Can%20you%20help?" target="_blank" class="whatsapp-btn">
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+</body>
+</html>
