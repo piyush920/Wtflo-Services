@@ -148,6 +148,7 @@ module.exports = async function handler(req, res) {
     const metaOfferIds = orderParts[0] || '';
     const metaSplitType = orderParts[1] || '';
     const metaPromoCode = orderParts[2] || '';
+    const metaGstin = orderParts[3] || '';
 
     let amountValid = false;
     if (metaOfferIds && metaSplitType) {
@@ -175,7 +176,7 @@ module.exports = async function handler(req, res) {
     const email = meta.e || payment.receipt_email || '';
     const name = meta.n || payment.payment_method?.billing_address?.name || email.split('@')[0];
     const phone = meta.p || payment.phone || '';
-    const gstin = meta.g || '';
+    const gstin = metaGstin || meta.g || '';
     const company = meta.c || '';
     const addrParts = (meta.a || '').split('|');
     const address = addrParts[0] || '';

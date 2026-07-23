@@ -72,10 +72,11 @@ Wtflo-Services-main/
 | `n` | Customer name | 100 chars |
 | `e` | Customer email | 254 chars |
 | `p` | Customer phone | 15 chars |
-| `g` | GSTIN (optional) | 15 chars |
 | `c` | Company (optional) | 200 chars |
 | `a` | `street\|city\|state\|pincode` (optional) | 250 chars |
-| `o` | `offer_ids\|split_type\|promo_code` (optional) | 250 chars |
+| `o` | `offer_ids\|split_type\|promo_code\|gstin` (always sent) | 250 chars |
+
+Note: GSTIN is embedded in the `o` field (4th position) instead of a separate `g` key to stay within Zoho's ~5 metadata entry limit. Webhook reads from `o[3]` with fallback to legacy `g` key.
 
 The `o` metadata key enables the webhook to do **per-session amount validation** instead of just checking against the pre-computed VALID_AMOUNTS set.
 

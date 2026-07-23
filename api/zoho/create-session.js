@@ -75,9 +75,6 @@ module.exports = async function handler(req, res) {
       { key: 'p', value: String(customer_phone).substring(0, 15) }
     ];
 
-    if (customer_gstin) {
-      metadata.push({ key: 'g', value: String(customer_gstin).substring(0, 15) });
-    }
     if (customer_company) {
       metadata.push({ key: 'c', value: String(customer_company).substring(0, 200) });
     }
@@ -87,10 +84,9 @@ module.exports = async function handler(req, res) {
       metadata.push({ key: 'a', value: addrParts.join('|').substring(0, 250) });
     }
 
-    if (offer_ids || split_type || promo_code) {
-      const orderInfo = [offer_ids || '', split_type || '', (promo_code || '').toUpperCase()].join('|');
-      metadata.push({ key: 'o', value: orderInfo.substring(0, 250) });
-    }
+    const orderParts = [offer_ids || '', split_type || '', (promo_code || '').toUpperCase(), customer_gstin || ''];
+    const orderInfo = orderParts.join('|');
+    metadata.push({ key: 'o', value: orderInfo.substring(0, 250) });
 
     const sessionBody = {
       amount: String(amount),
