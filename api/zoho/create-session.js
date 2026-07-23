@@ -1,59 +1,8 @@
+const { calculateAmount, validateGSTIN, OFFERS, PROMO_CODES } = require('./pricing');
+
 const ZOHO_ACCOUNTS = 'https://accounts.zoho.in';
 const ZOHO_PAYMENTS = 'https://payments.zoho.in/api/v1';
 const ZOHO_ACCOUNT_ID = '60078356828';
-
-const OFFERS = {
-  'lead-gen': 25000,
-  'instant-booking': 25000,
-  'followup': 25000,
-  'recovery': 25000,
-  'test-payment': 1
-};
-
-const PROMO_CODES = {
-  'PILOT1': 1,
-  'PILOT2': 2,
-  'PILOT3': 3,
-  'FOUNDER4': 4
-};
-
-const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-
-function calculateAmount(offerIds, splitType, promoCode) {
-  const ids = offerIds.split(',').filter(id => OFFERS[id]);
-  if (ids.length === 0) return null;
-
-  let subtotal = 0;
-  const prices = [];
-  ids.forEach(id => {
-    subtotal += OFFERS[id];
-    prices.push(OFFERS[id]);
-  });
-
-  let discount = 0;
-  let promoDiscount = 0;
-
-  if (promoCode && PROMO_CODES[promoCode]) {
-    const freeCount = PROMO_CODES[promoCode];
-    prices.sort((a, b) => b - a);
-    for (let i = 0; i < freeCount && i < prices.length; i++) {
-      promoDiscount += prices[i];
-    }
-  } else if (splitType === 'full') {
-    discount = Math.round(subtotal * 0.10);
-  }
-
-  const taxable = subtotal - discount - promoDiscount;
-  const gst = Math.round(taxable * 0.18);
-  const total = taxable + gst;
-
-  return splitType === 'full' ? total : Math.round(total / 2);
-}
-
-function validateGSTIN(gstin) {
-  if (!gstin) return true;
-  return GSTIN_REGEX.test(gstin);
-}
 
 async function getAccessToken() {
   const refreshToken = process.env.ZOHO_PAYMENTS_REFRESH_TOKEN;
@@ -136,6 +85,11 @@ module.exports = async function handler(req, res) {
     const addrParts = [customer_address, customer_city, customer_state, customer_pincode].filter(Boolean);
     if (addrParts.length > 0) {
       metadata.push({ key: 'a', value: addrParts.join('|').substring(0, 250) });
+    }
+
+    if (offer_ids || split_type || promo_code) {
+      const orderInfo = [offer_ids || '', split_type || '', (promo_code || '').toUpperCase()].join('|');
+      metadata.push({ key: 'o', value: orderInfo.substring(0, 250) });
     }
 
     const sessionBody = {

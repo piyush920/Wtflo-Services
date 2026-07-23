@@ -1,61 +1,37 @@
-const { getBooksAccessToken, ZOHO_BOOKS } = require('./books-auth');
-
-const SUPPLIER_STATE_CODE = '06';
-const SAC_CODE = '998365';
-const OFFER_PRICE = 25000;
-
-function getBankDetails() {
-  return process.env.BANK_DETAILS || 'Payment received via Zoho Payments';
-}
+const { OFFER_PRICE, SAC_CODE, SUPPLIER_STATE_CODE } = require('./pricing');
+const { booksApiCall, getBankDetails, getTaxId, findOrCreateContact, createInvoice, sendInvoiceEmail } = require('./books-api');
 
 function extractGSTINStateCode(gstin) {
   return gstin ? gstin.substring(0, 2) : null;
 }
 
-async function booksApiCall(method, path, body) {
-  const token = await getBooksAccessToken();
-  const orgId = process.env.ZOHO_BOOKS_ORG_ID;
-  const url = `${ZOHO_BOOKS}${path}${path.includes('?') ? '&' : '?'}organization_id=${orgId}`;
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
-  const options = {
-    method,
-    signal: controller.signal,
-    headers: {
-      'Authorization': `Zoho-oauthtoken ${token}`,
-      'Content-Type': 'application/json'
+function getPromoLineItems(offerCount, promoCode, taxId) {
+  const lineItems = [];
+  if (offerCount === 4 && promoCode === 'FOUNDER4') {
+    lineItems.push({
+      name: 'WhatsApp Marketing System - All 4 Systems Setup',
+      description: 'Complimentary setup (FOUNDER4 promo)',
+      rate: 0,
+      quantity: 1,
+      hsn_or_sac: SAC_CODE,
+      tax_id: taxId
+    });
+  } else {
+    for (let i = 0; i < offerCount; i++) {
+      const isFree = (promoCode === 'PILOT1' && i === 0) ||
+                     (promoCode === 'PILOT2' && i < 2) ||
+                     (promoCode === 'PILOT3' && i < 3);
+      lineItems.push({
+        name: isFree ? 'WhatsApp Marketing System - Complimentary' : 'WhatsApp Marketing System',
+        description: isFree ? `System ${i + 1} — Complimentary (${promoCode})` : `System ${i + 1} setup`,
+        rate: isFree ? 0 : OFFER_PRICE,
+        quantity: 1,
+        hsn_or_sac: SAC_CODE,
+        tax_id: taxId
+      });
     }
-  };
-  if (body) options.body = JSON.stringify(body);
-  try {
-    const res = await fetch(url, options);
-    clearTimeout(timeout);
-    if (!res.ok) {
-      const errText = await res.text().catch(() => '');
-      throw new Error(`Zoho API error ${res.status}: ${errText}`);
-    }
-    return res.json();
-  } catch (e) {
-    clearTimeout(timeout);
-    throw e;
   }
-}
-
-async function getTaxIds() {
-  const data = await booksApiCall('GET', '/settings/taxes');
-  const taxes = data.taxes || [];
-
-  const intra = taxes.find(t => t.tax_name === 'GST @18%' && t.tax_type === 'tax_group');
-  const inter = taxes.find(t => t.tax_name === 'IGST18' && t.tax_type === 'tax');
-
-  return {
-    intra: intra?.tax_id || null,
-    inter: inter?.tax_id || null
-  };
-}
-
-function getBankDetailsText() {
-  return process.env.BANK_DETAILS || 'Payment received via Zoho Payments';
+  return lineItems;
 }
 
 module.exports = async function handler(req, res) {
@@ -79,129 +55,45 @@ module.exports = async function handler(req, res) {
     }
 
     const cleanName = String(customer_name).replace(/[<>"'&]/g, '').substring(0, 100);
+    const customerAddress = {
+      street: customer_address || '',
+      city: customer_city || '',
+      state: customer_state || '',
+      pincode: customer_pincode || ''
+    };
 
-    let contactId;
-    const searchData = await booksApiCall('GET', `/contacts?email=${encodeURIComponent(customer_email)}`);
-    if (searchData.contacts && searchData.contacts.length > 0) {
-      contactId = searchData.contacts[0].contact_id;
-    } else {
-      const nameSearch = await booksApiCall('GET', `/contacts?contact_name=${encodeURIComponent(cleanName)}`);
-      if (nameSearch.contacts && nameSearch.contacts.length > 0) {
-        contactId = nameSearch.contacts[0].contact_id;
-      } else {
-        const contactBody = {
-          contact_name: cleanName,
-          email: customer_email,
-          phone: customer_phone || '',
-          contact_type: 'customer'
-        };
-        if (customer_gstin) {
-          contactBody.gst_treatment = 'business_gst';
-          contactBody.gst_no = customer_gstin;
-        }
-        if (customer_company) contactBody.company_name = customer_company;
-        if (customer_address) {
-          contactBody.billing_address = {
-            street: customer_address.substring(0, 99),
-            city: (customer_city || '').substring(0, 99),
-            state: (customer_state || '').substring(0, 99),
-            zip: (customer_pincode || ''),
-            country: 'India'
-          };
-        }
-        try {
-          const createContact = await booksApiCall('POST', '/contacts', contactBody);
-          contactId = createContact.contact.contact_id;
-        } catch (e) {
-          if (e.message && e.message.includes('already exists')) {
-            const retry = await booksApiCall('GET', `/contacts?contact_name=${encodeURIComponent(cleanName)}`);
-            if (retry.contacts && retry.contacts.length > 0) {
-              contactId = retry.contacts[0].contact_id;
-            }
-          }
-          if (!contactId) throw e;
-        }
-      }
-    }
+    const { contactId } = await findOrCreateContact(
+      customer_email, cleanName, customer_phone || '',
+      customer_gstin, customer_company, customer_address ? customerAddress : null
+    );
 
     const today = new Date().toISOString().split('T')[0];
-    const taxIds = await getTaxIds();
-    const isInterState = customer_gstin ? extractGSTINStateCode(customer_gstin) !== SUPPLIER_STATE_CODE : false;
-    const taxId = isInterState ? (taxIds.inter || taxIds.intra) : (taxIds.intra || taxIds.inter);
+    const taxId = await getTaxId(customer_gstin);
 
     if (!taxId) {
-      console.error('No tax ID found:', taxIds);
+      console.error('No tax ID found');
       throw new Error('Tax configuration missing');
     }
 
-    const lineItems = [];
-    if (offerCount === 4 && promo_code === 'FOUNDER4') {
-      lineItems.push({
-        name: 'WhatsApp Marketing System - All 4 Systems Setup',
-        description: 'Complimentary setup (FOUNDER4 promo)',
-        rate: 0,
-        quantity: 1,
-        hsn_or_sac: SAC_CODE,
-        tax_id: taxId
-      });
-    } else {
-      for (let i = 0; i < offerCount; i++) {
-        const isFree = (promo_code === 'PILOT1' && i === 0) ||
-                       (promo_code === 'PILOT2' && i < 2) ||
-                       (promo_code === 'PILOT3' && i < 3);
-        lineItems.push({
-          name: isFree ? `WhatsApp Marketing System - Complimentary` : `WhatsApp Marketing System`,
-          description: isFree ? `System ${i + 1} — Complimentary (${promo_code})` : `System ${i + 1} setup`,
-          rate: isFree ? 0 : OFFER_PRICE,
-          quantity: 1,
-          hsn_or_sac: SAC_CODE,
-          tax_id: taxId
-        });
-      }
-    }
+    const lineItems = getPromoLineItems(offerCount, promo_code, taxId);
 
     const placeOfSupply = customer_gstin ? extractGSTINStateCode(customer_gstin) : SUPPLIER_STATE_CODE;
-    const invoiceBody = {
-      customer_id: contactId,
-      date: today,
-      due_date: today,
-      reference_number: `FreePromo-${promo_code}-${Date.now()}`,
-      place_of_supply: placeOfSupply,
-      gst_treatment: customer_gstin ? 'business_gst' : 'consumer',
-      notes: `Thank you for your business!\n\nPromo Code: ${promo_code}\n${getBankDetailsText()}`,
-      terms: `Complimentary setup via ${promo_code}`,
-      line_items: lineItems
-    };
+    const referenceNumber = `FreePromo-${promo_code}-${Date.now()}`;
+    const notes = `Thank you for your business!\n\nPromo Code: ${promo_code}\n${getBankDetails()}`;
+    const terms = `Complimentary setup via ${promo_code}`;
 
-    const invoiceData = await booksApiCall('POST', '/invoices', invoiceBody);
-    if (!invoiceData.invoice) {
-      throw new Error('Failed to create invoice');
-    }
+    const invoice = await createInvoice(
+      contactId, lineItems, placeOfSupply, customer_gstin,
+      referenceNumber, notes, terms, today,
+      customer_address ? customerAddress : null
+    );
 
-    const invoiceId = invoiceData.invoice.invoice_id;
-
-    if (customer_address) {
-      try {
-        await booksApiCall('PUT', `/invoices/${invoiceId}/address/billing`, {
-          address: String(customer_address).substring(0, 99),
-          city: String(customer_city || '').substring(0, 99),
-          state: String(customer_state || '').substring(0, 99),
-          zip: String(customer_pincode || '').substring(0, 99),
-          country: 'India'
-        });
-      } catch (e) {
-        console.error('Billing address update failed (non-fatal):', e.message);
-      }
-    }
-    booksApiCall('POST', `/invoices/${invoiceId}/email`, {
-      to_mail_ids: [customer_email],
-      send_from_org_email_id: true
-    }).catch(e => console.error('Invoice email failed (non-fatal):', e.message));
+    sendInvoiceEmail(invoice.invoice_id, customer_email);
 
     return res.status(200).json({
       success: true,
-      invoice_id: invoiceId,
-      invoice_number: invoiceData.invoice.invoice_number
+      invoice_id: invoice.invoice_id,
+      invoice_number: invoice.invoice_number
     });
   } catch (err) {
     console.error('Free invoice error:', err);
