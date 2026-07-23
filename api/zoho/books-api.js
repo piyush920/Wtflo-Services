@@ -103,19 +103,46 @@ async function lookupGSTIN(gstin) {
 
 async function findOrCreateContact(email, name, phone, gstin, company, customerAddress, doGstLookup) {
   const gstData = gstin && doGstLookup !== false ? await lookupGSTIN(gstin) : null;
+  const businessName = (gstData && gstData.trade_name) || company || '';
 
   const searchData = await booksApiCall('GET', `/contacts?email=${encodeURIComponent(email)}`);
   if (searchData.contacts && searchData.contacts.length > 0) {
-    return { contactId: searchData.contacts[0].contact_id, gstData };
+    const existing = searchData.contacts[0];
+    if (businessName && existing.contact_name !== businessName) {
+      try {
+        await booksApiCall('PUT', `/contacts/${existing.contact_id}`, {
+          contact_name: businessName,
+          company_name: businessName,
+          gst_no: gstin,
+          gst_treatment: 'business_gst'
+        });
+      } catch (e) {
+        console.error('Contact name update failed (non-fatal):', e.message);
+      }
+    }
+    return { contactId: existing.contact_id, gstData };
   }
 
   const nameSearch = await booksApiCall('GET', `/contacts?contact_name=${encodeURIComponent(name)}`);
   if (nameSearch.contacts && nameSearch.contacts.length > 0) {
-    return { contactId: nameSearch.contacts[0].contact_id, gstData };
+    const existing = nameSearch.contacts[0];
+    if (businessName && existing.contact_name !== businessName) {
+      try {
+        await booksApiCall('PUT', `/contacts/${existing.contact_id}`, {
+          contact_name: businessName,
+          company_name: businessName,
+          gst_no: gstin,
+          gst_treatment: 'business_gst'
+        });
+      } catch (e) {
+        console.error('Contact name update failed (non-fatal):', e.message);
+      }
+    }
+    return { contactId: existing.contact_id, gstData };
   }
 
   const contactBody = {
-    contact_name: (gstData && gstData.trade_name) || name,
+    contact_name: businessName || name,
     email: email,
     phone: phone || '',
     contact_type: 'customer'
@@ -125,8 +152,8 @@ async function findOrCreateContact(email, name, phone, gstin, company, customerA
     contactBody.gst_treatment = 'business_gst';
     contactBody.gst_no = gstin;
   }
-  if (gstData && gstData.trade_name) {
-    contactBody.company_name = company || gstData.trade_name;
+  if (businessName) {
+    contactBody.company_name = businessName;
   } else if (company) {
     contactBody.company_name = company;
   }
