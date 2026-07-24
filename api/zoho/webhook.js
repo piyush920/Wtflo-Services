@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const { calculateAmount, computeAllValidAmounts, SUPPLIER_STATE_CODE, SAC_CODE } = require('./pricing');
 const { booksApiCall, getBankDetails, getTaxId, getTaxIds, findOrCreateContact, createInvoice, sendInvoiceEmail, recordPayment } = require('./books-api');
+const { syncContact, sendInternalNotification } = require('./brevo');
 
 const ZOHO_BOOKS = 'https://www.zohoapis.in/books/v3';
 
@@ -209,6 +210,12 @@ module.exports = async function handler(req, res) {
 
     sendInvoiceEmail(invoice.invoice_id, email);
     recordPayment(contactId, invoice.invoice_id, amount, paymentId, today);
+
+    syncContact({ email, name: cleanName, phone, offers: metaOfferIds, amount });
+    sendInternalNotification({
+      subject: `💰 New Sale — ₹${amount.toLocaleString('en-IN')}`,
+      text: `Customer: ${cleanName}\nEmail: ${email}\nPhone: ${phone}\nOffers: ${metaOfferIds}\nAmount: ₹${amount.toLocaleString('en-IN')}\nCompany: ${cleanCompany}`
+    });
 
     return res.status(200).json({
       success: true,

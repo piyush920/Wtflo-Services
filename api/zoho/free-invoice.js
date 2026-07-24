@@ -1,5 +1,6 @@
 const { OFFER_PRICE, SAC_CODE, SUPPLIER_STATE_CODE } = require('./pricing');
 const { booksApiCall, getBankDetails, getTaxId, findOrCreateContact, createInvoice, sendInvoiceEmail } = require('./books-api');
+const { syncContact, sendInternalNotification } = require('./brevo');
 
 function extractGSTINStateCode(gstin) {
   return gstin ? gstin.substring(0, 2) : null;
@@ -89,6 +90,12 @@ module.exports = async function handler(req, res) {
     );
 
     sendInvoiceEmail(invoice.invoice_id, customer_email);
+
+    syncContact({ email: customer_email, name: cleanName, phone: customer_phone || '', offers: offer_ids });
+    sendInternalNotification({
+      subject: `💰 New Sale (Promo: ${promo_code}) — ₹0`,
+      text: `Customer: ${cleanName}\nEmail: ${customer_email}\nPhone: ${customer_phone || 'N/A'}\nOffers: ${offer_ids}\nPromo: ${promo_code}`
+    });
 
     return res.status(200).json({
       success: true,
