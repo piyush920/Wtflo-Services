@@ -91,8 +91,8 @@ module.exports = async function handler(req, res) {
 
     sendInvoiceEmail(invoice.invoice_id, customer_email);
 
-    syncContact({ email: customer_email, name: cleanName, phone: customer_phone || '', offers: offer_ids });
-    sendInternalNotification({
+    await syncContact({ email: customer_email, name: cleanName, phone: customer_phone || '', offers: offer_ids });
+    await sendInternalNotification({
       subject: `💰 New Sale (Promo: ${promo_code}) — ₹0`,
       text: `Customer: ${cleanName}\nEmail: ${customer_email}\nPhone: ${customer_phone || 'N/A'}\nOffers: ${offer_ids}\nPromo: ${promo_code}`
     });

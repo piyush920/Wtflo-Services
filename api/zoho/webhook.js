@@ -211,8 +211,8 @@ module.exports = async function handler(req, res) {
     sendInvoiceEmail(invoice.invoice_id, email);
     recordPayment(contactId, invoice.invoice_id, amount, paymentId, today);
 
-    syncContact({ email, name: cleanName, phone, offers: metaOfferIds, amount });
-    sendInternalNotification({
+    await syncContact({ email, name: cleanName, phone, offers: metaOfferIds, amount });
+    await sendInternalNotification({
       subject: `💰 New Sale — ₹${amount.toLocaleString('en-IN')}`,
       text: `Customer: ${cleanName}\nEmail: ${email}\nPhone: ${phone}\nOffers: ${metaOfferIds}\nAmount: ₹${amount.toLocaleString('en-IN')}\nCompany: ${cleanCompany}`
     });
